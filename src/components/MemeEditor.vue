@@ -35,16 +35,24 @@
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <!-- Meme Preview -->
           <div class="lg:col-span-3">
-            <div class="bg-gray-900 rounded-lg p-6 border border-gray-800">
+            <div class="bg-gray-900 rounded-lg p-6 border border-gray-800 relative">
               <img
+                v-show="imageLoaded"
                 :src="memeUrl"
                 :alt="template.name"
                 class="w-full rounded"
                 @load="imageLoaded = true"
                 @error="imageError = true"
               />
-              <div v-if="!imageLoaded && !imageError" class="w-full aspect-square bg-gray-800 rounded animate-pulse"></div>
-              <div v-if="imageError" class="w-full aspect-square bg-gray-800 rounded flex items-center justify-center text-gray-500">
+              <div v-if="!imageLoaded && !imageError" class="w-full min-h-[400px] bg-gray-800 rounded flex items-center justify-center">
+                <div class="text-gray-600">
+                  <svg class="w-12 h-12 animate-spin mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div v-if="imageError" class="w-full min-h-[400px] bg-gray-800 rounded flex items-center justify-center text-gray-500">
                 Failed to load image
               </div>
             </div>
