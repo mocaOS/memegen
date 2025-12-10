@@ -1,4 +1,4 @@
-# 𓄂 Art DeCC0s Meme Generator
+# 𓄂 Art DeCC0s Meme Generator 𓄘
 
 **A Community Meme Creation Tool**
 
