@@ -7,6 +7,8 @@ A minimalist meme generator built for the Art DeCC0s community at the Museum of 
 Visit: [https://memes.decc0s.com](https://memes.decc0s.com)  
 Join the Community: [Art DeCC0s Discord](https://discord.com/invite/Rs7wxUTrWV)
 
+![Example Image](https://api-memegen.decc0s.com/images/everywhere/memes/memes_everywhere.png)
+
 ## About Art DeCC0s
 
 Art DeCC0s are the Museum of Crypto Art's 10,000-piece PFP collection—a love-letter to crypto art and its amazing artists, collectors, developers, and admirers. Each DeCC0 is a completely unique 1/1 character with unprecedented visual diversity and, through The Codex, deep AI-driven personalities.
@@ -18,6 +20,8 @@ The Codex represents over 105 million words of personality data, making each of 
 This application is a community tool for creating and sharing Art DeCC0s memes. Built with a clean, monochrome aesthetic and MOCA's signature orange accent (#FF9500), it provides an intuitive interface for browsing templates, editing text, and generating memes to share with the community.
 
 Community members create memes and share them in the [Art DeCC0s Discord](https://discord.com/invite/Rs7wxUTrWV), building a growing collection of community culture and inside jokes. These shared memes live on in the companion [Meme Studio](https://vibe.museumofcryptoart.com) application, chronicling the Art DeCC0s journey.
+
+![Example Image](https://api-memegen.decc0s.com/images/spongebob-rainbow/enjoy/meme_creation.jpg)
 
 ## ✨ Features
 
