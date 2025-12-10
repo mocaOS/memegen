@@ -32,6 +32,14 @@ Community members create memes and share them in the [Art DeCC0s Discord](https:
 - ⚡ **Fast & Modern** - Built with Vue 3 and Vite for instant loading
 - 💬 **Discord Integration** - Direct link to share your memes with the community
 
+## 📚 API Documentation
+
+Explore the full interactive API documentation with OpenAPI specification at:
+
+**<https://api-memegen.decc0s.com/docs/>**
+
+The OpenAPI JSON specification is also available at: <https://api-memegen.decc0s.com/openapi.json>
+
 ## 🚀 Getting Started
 
 ### Prerequisites
