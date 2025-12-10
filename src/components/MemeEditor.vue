@@ -110,7 +110,7 @@
     </div>
 
     <!-- Landing Page with Random Template -->
-    <div v-else class="flex-1 flex items-center justify-center p-3 sm:p-4 md:p-6">
+    <div v-else class="flex-1 flex items-start lg:items-center justify-center p-3 sm:p-4 md:p-6 pt-6 lg:pt-6">
       <div class="max-w-2xl w-full">
         <div v-if="randomTemplate" class="space-y-4 sm:space-y-6">
           <!-- Template Name -->
