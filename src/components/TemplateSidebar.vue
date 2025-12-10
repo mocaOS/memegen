@@ -50,7 +50,7 @@
 
     <!-- Footer Info -->
     <div class="p-4 border-t border-gray-800 text-xs text-gray-500">
-      <p>{{ templates.length }} templates available</p>
+      <p>{{ uniqueTemplates.length }} templates available</p>
     </div>
   </div>
 </template>
@@ -71,11 +71,24 @@ const loading = ref(true);
 const error = ref(null);
 const searchQuery = ref('');
 
+// Deduplicate templates by ID
+const uniqueTemplates = computed(() => {
+  const seen = new Map();
+  templates.value.forEach(template => {
+    if (!seen.has(template.id)) {
+      seen.set(template.id, template);
+    }
+  });
+  return Array.from(seen.values());
+});
+
 const filteredTemplates = computed(() => {
-  if (!searchQuery.value) return templates.value;
+  const templatesSource = uniqueTemplates.value;
+  
+  if (!searchQuery.value) return templatesSource;
   
   const query = searchQuery.value.toLowerCase();
-  return templates.value.filter(template => 
+  return templatesSource.filter(template => 
     template.name.toLowerCase().includes(query) ||
     template.id.toLowerCase().includes(query)
   );
