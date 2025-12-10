@@ -2,7 +2,7 @@
 
 **A Community Meme Creation Tool**
 
-A minimalist meme generator built for the Art DeCC0s community at the Museum of Crypto Art. Create memes from hundreds of templates, customize them with your own text, and share them with the community.
+A minimalist meme generator built for the Art DeCC0s community at the Museum of Crypto Art. Create memes a growing set of templates, customize them with your own text, and share them with the community.
 
 Visit: [https://memes.decc0s.com](https://memes.decc0s.com)  
 Join the Community: [Art DeCC0s Discord](https://discord.com/invite/Rs7wxUTrWV)
