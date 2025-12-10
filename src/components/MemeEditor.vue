@@ -37,14 +37,14 @@
           <div class="lg:col-span-3">
             <div class="bg-gray-900 rounded-lg p-6 border border-gray-800 relative">
               <img
-                v-show="imageLoaded"
+                v-show="!initialLoading"
                 :src="memeUrl"
                 :alt="template.name"
                 class="w-full rounded"
-                @load="imageLoaded = true"
+                @load="handleImageLoad"
                 @error="imageError = true"
               />
-              <div v-if="!imageLoaded && !imageError" class="w-full min-h-[400px] bg-gray-800 rounded flex items-center justify-center">
+              <div v-if="initialLoading && !imageError" class="w-full min-h-[400px] bg-gray-800 rounded flex items-center justify-center">
                 <div class="text-gray-600">
                   <svg class="w-12 h-12 animate-spin mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -169,7 +169,7 @@ const props = defineProps({
 const emit = defineEmits(['select-template']);
 
 const textLines = ref([]);
-const imageLoaded = ref(false);
+const initialLoading = ref(true);
 const imageError = ref(false);
 const downloading = ref(false);
 const randomTemplate = ref(null);
@@ -202,24 +202,28 @@ watch(() => props.template, (newTemplate) => {
       .fill('')
       .map((_, i) => exampleText[i] || '');
     
-    imageLoaded.value = false;
+    // Only show loading spinner when switching templates
+    initialLoading.value = true;
     imageError.value = false;
   }
 }, { immediate: true });
 
+// Handle image load
+const handleImageLoad = () => {
+  initialLoading.value = false;
+};
+
 // Debounced update to avoid too many URL changes
 const debouncedUpdateMeme = () => {
-  imageLoaded.value = false;
-  imageError.value = false;
-  
+  // Just debounce, don't reset loading states
+  // The memeUrl computed property will handle the URL change
   if (debounceTimer) {
     clearTimeout(debounceTimer);
   }
   
   debounceTimer = setTimeout(() => {
     // Trigger reactive update
-    imageLoaded.value = false;
-  }, 500);
+  }, 300);
 };
 
 // Download meme
