@@ -138,7 +138,7 @@
           <!-- Random Template Preview -->
           <div class="bg-gray-900 rounded-lg p-3 sm:p-4 md:p-6 border border-gray-800">
             <img
-              :src="randomTemplate.example.url"
+              :src="`${randomTemplate.example.url}?width=1000`"
               :alt="randomTemplate.name"
               class="w-full rounded"
             />
@@ -183,7 +183,7 @@ const memeUrl = computed(() => {
   
   // If no text or all empty, show the blank template
   if (textLines.value.every(line => !line.trim())) {
-    return props.template.blank;
+    return `${props.template.blank}?width=1000`;
   }
   
   // Build the text path with URL encoding
@@ -191,7 +191,7 @@ const memeUrl = computed(() => {
     .map(line => encodeURIComponent(line || '_'))
     .join('/');
   
-  return `${API_BASE_URL}/images/${props.template.id}/${textPath}.png`;
+  return `${API_BASE_URL}/images/${props.template.id}/${textPath}.png?width=1000`;
 });
 
 // Watch for template changes

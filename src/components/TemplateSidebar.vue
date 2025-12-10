@@ -35,7 +35,7 @@
         >
           <div class="flex items-center space-x-3">
             <img
-              :src="template.blank"
+              :src="`${template.blank}?width=200`"
               :alt="template.name"
               class="w-20 h-20 object-cover rounded bg-gray-900 flex-shrink-0"
               loading="lazy"
