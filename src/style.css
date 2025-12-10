@@ -10,23 +10,31 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-primary hover:bg-opacity-90 text-black font-semibold py-2 px-4 rounded transition-all duration-200;
+    @apply bg-primary hover:bg-opacity-90 text-black font-semibold py-2.5 sm:py-2 px-4 sm:px-4 rounded transition-all duration-200 min-h-[44px] sm:min-h-0 active:scale-95;
   }
   
   .btn-secondary {
-    @apply bg-gray-800 hover:bg-gray-700 text-gray-100 font-semibold py-2 px-4 rounded transition-all duration-200;
+    @apply bg-gray-800 hover:bg-gray-700 text-gray-100 font-semibold py-2.5 sm:py-2 px-4 sm:px-4 rounded transition-all duration-200 min-h-[44px] sm:min-h-0 active:scale-95;
   }
   
   .input-field {
-    @apply w-full bg-gray-900 border border-gray-700 rounded px-3 py-2 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-primary transition-colors duration-200;
+    @apply w-full bg-gray-900 border border-gray-700 rounded px-3 py-2.5 sm:py-2 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-primary transition-colors duration-200 min-h-[44px] sm:min-h-0;
   }
   
   .template-card {
-    @apply cursor-pointer p-3 rounded border-2 border-gray-800 hover:border-gray-600 transition-all duration-200;
+    @apply cursor-pointer p-3 rounded border-2 border-gray-800 hover:border-gray-600 transition-all duration-200 active:scale-[0.98];
   }
   
   .template-card.active {
     @apply border-primary bg-gray-900;
+  }
+}
+
+/* Ensure proper touch targets on mobile */
+@media (max-width: 640px) {
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
 

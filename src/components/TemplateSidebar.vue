@@ -1,9 +1,9 @@
 <template>
-  <div class="w-80 bg-gray-950 border-r border-gray-800 flex flex-col h-screen">
+  <div class="w-80 sm:w-80 bg-gray-950 border-r border-gray-800 flex flex-col h-screen">
     <!-- Header -->
     <div class="p-4 border-b border-gray-800">
-      <h1 class="text-xl font-bold text-primary">Art DeCC0s</h1>
-      <p class="text-sm text-gray-400 mt-1">Meme Generator</p>
+      <h1 class="text-lg sm:text-xl font-bold text-primary">Art DeCC0s</h1>
+      <p class="text-xs sm:text-sm text-gray-400 mt-1">Meme Generator</p>
     </div>
 
     <!-- Search -->
