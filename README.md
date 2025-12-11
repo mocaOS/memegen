@@ -17,7 +17,7 @@ The Codex represents over 105 million words of personality data, making each of 
 
 ## About the Meme Generator
 
-This application is a community tool for creating and sharing Art DeCC0s memes. Built with a clean, monochrome aesthetic and MOCA's signature orange accent (#FF9500), it provides an intuitive interface for browsing templates, editing text, and generating memes to share with the community.
+This application is a community tool for creating and sharing Art DeCC0s memes. Built with a clean monochrome aesthetic it provides an intuitive interface for browsing templates, editing text, and generating memes to share with the community.
 
 Community members create memes and share them in the [Art DeCC0s Discord](https://discord.com/invite/Rs7wxUTrWV), building a growing collection of community culture and inside jokes. These shared memes live on in the companion [Meme Studio](https://vibe.museumofcryptoart.com) application, chronicling the Art DeCC0s journey.
 
