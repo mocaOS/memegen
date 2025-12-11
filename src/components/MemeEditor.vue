@@ -31,7 +31,12 @@
     </div>
 
     <!-- Main Content -->
-    <div v-if="template" class="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6">
+    <div 
+      v-if="template" 
+      class="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6"
+      @touchstart="handleTouchStart"
+      @touchend="handleTouchEnd"
+    >
       <div class="max-w-6xl mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
           <!-- Meme Preview -->
@@ -96,14 +101,28 @@
               </ul>
             </div>
 
-            <!-- Download Button -->
-            <button
-              @click="downloadMeme"
-              class="btn-primary w-full text-sm sm:text-base"
-              :disabled="downloading"
-            >
-              {{ downloading ? 'Downloading...' : 'Download Meme' }}
-            </button>
+            <!-- Action Buttons -->
+            <div class="flex gap-3">
+              <button
+                @click="copyToClipboard"
+                :class="[
+                  'flex-1 text-sm sm:text-base transition-all duration-200',
+                  copied 
+                    ? 'bg-white text-black font-semibold' 
+                    : 'btn-secondary'
+                ]"
+                :disabled="copying || copied"
+              >
+                {{ copying ? 'Copying...' : copied ? 'Copied!' : 'Copy to Clipboard' }}
+              </button>
+              <button
+                @click="downloadMeme"
+                class="btn-primary flex-1 text-sm sm:text-base"
+                :disabled="downloading"
+              >
+                {{ downloading ? 'Downloading...' : 'Download Meme' }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -138,7 +157,7 @@
           <!-- Random Template Preview -->
           <div class="bg-gray-900 rounded-lg p-3 sm:p-4 md:p-6 border border-gray-800">
             <img
-              :src="`${randomTemplate.example.url}?width=1000`"
+              :src="`${randomTemplate.example.url}?width=600`"
               :alt="randomTemplate.name"
               class="w-full rounded"
             />
@@ -167,15 +186,23 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['select-template']);
+const emit = defineEmits(['select-template', 'next-template', 'prev-template']);
 
 const textLines = ref([]);
 const initialLoading = ref(true);
 const imageError = ref(false);
 const downloading = ref(false);
+const copying = ref(false);
+const copied = ref(false);
 const randomTemplate = ref(null);
 const loadingRandom = ref(false);
 let debounceTimer = null;
+
+// Touch swipe handling
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
 
 // Generate meme URL based on template and text
 const memeUrl = computed(() => {
@@ -225,6 +252,37 @@ const debouncedUpdateMeme = () => {
   debounceTimer = setTimeout(() => {
     // Trigger reactive update
   }, 300);
+};
+
+// Copy meme to clipboard
+const copyToClipboard = async () => {
+  try {
+    copying.value = true;
+    
+    // Fetch the image as blob
+    const response = await fetch(memeUrl.value);
+    const blob = await response.blob();
+    
+    // Copy to clipboard using Clipboard API
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        [blob.type]: blob
+      })
+    ]);
+    
+    // Show success state
+    copying.value = false;
+    copied.value = true;
+    
+    // Reset after 1 second
+    setTimeout(() => {
+      copied.value = false;
+    }, 1000);
+  } catch (error) {
+    console.error('Error copying meme:', error);
+    alert('Failed to copy meme to clipboard. Please try downloading instead.');
+    copying.value = false;
+  }
 };
 
 // Download meme
@@ -286,6 +344,35 @@ const goBack = () => {
   emit('select-template', null);
   // Fetch a new random template for the landing page
   fetchRandomTemplate();
+};
+
+// Swipe gesture handlers for mobile navigation
+const handleTouchStart = (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+  touchStartY = e.changedTouches[0].screenY;
+};
+
+const handleTouchEnd = (e) => {
+  touchEndX = e.changedTouches[0].screenX;
+  touchEndY = e.changedTouches[0].screenY;
+  handleSwipeGesture();
+};
+
+const handleSwipeGesture = () => {
+  const swipeDistanceX = touchEndX - touchStartX;
+  const swipeDistanceY = Math.abs(touchEndY - touchStartY);
+  const minSwipeDistance = 50; // Minimum distance for a swipe
+  
+  // Only trigger if horizontal swipe is greater than vertical (to avoid conflicts with scrolling)
+  if (Math.abs(swipeDistanceX) > minSwipeDistance && Math.abs(swipeDistanceX) > swipeDistanceY) {
+    if (swipeDistanceX > 0) {
+      // Swipe right - go to previous template
+      emit('prev-template');
+    } else {
+      // Swipe left - go to next template
+      emit('next-template');
+    }
+  }
 };
 
 // Load random template on mount (only if no template is selected)

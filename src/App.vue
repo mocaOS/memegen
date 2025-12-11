@@ -40,18 +40,23 @@
     <MemeEditor 
       :template="selectedTemplate"
       @select-template="selectTemplate"
+      @next-template="navigateToNextTemplate"
+      @prev-template="navigateToPrevTemplate"
       class="flex-1"
     />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
 import TemplateSidebar from './components/TemplateSidebar.vue';
 import MemeEditor from './components/MemeEditor.vue';
+import { API_ENDPOINTS } from './config/api';
 
 const selectedTemplate = ref(null);
 const sidebarOpen = ref(false);
+const templates = ref([]);
 
 const selectTemplate = (template) => {
   selectedTemplate.value = template;
@@ -62,5 +67,60 @@ const handleSelectTemplate = (template) => {
   // Close sidebar on mobile after selection
   sidebarOpen.value = false;
 };
+
+// Deduplicate templates by ID (same logic as sidebar)
+const uniqueTemplates = computed(() => {
+  const seen = new Map();
+  templates.value.forEach(template => {
+    if (!seen.has(template.id)) {
+      seen.set(template.id, template);
+    }
+  });
+  return Array.from(seen.values());
+});
+
+// Navigate to next template
+const navigateToNextTemplate = () => {
+  if (!selectedTemplate.value || uniqueTemplates.value.length === 0) return;
+  
+  const currentIndex = uniqueTemplates.value.findIndex(
+    t => t.id === selectedTemplate.value.id
+  );
+  
+  if (currentIndex !== -1) {
+    const nextIndex = (currentIndex + 1) % uniqueTemplates.value.length;
+    selectedTemplate.value = uniqueTemplates.value[nextIndex];
+  }
+};
+
+// Navigate to previous template
+const navigateToPrevTemplate = () => {
+  if (!selectedTemplate.value || uniqueTemplates.value.length === 0) return;
+  
+  const currentIndex = uniqueTemplates.value.findIndex(
+    t => t.id === selectedTemplate.value.id
+  );
+  
+  if (currentIndex !== -1) {
+    const prevIndex = currentIndex === 0 
+      ? uniqueTemplates.value.length - 1 
+      : currentIndex - 1;
+    selectedTemplate.value = uniqueTemplates.value[prevIndex];
+  }
+};
+
+// Fetch templates on mount
+const fetchTemplates = async () => {
+  try {
+    const response = await axios.get(API_ENDPOINTS.templates);
+    templates.value = response.data;
+  } catch (error) {
+    console.error('Error fetching templates:', error);
+  }
+};
+
+onMounted(() => {
+  fetchTemplates();
+});
 </script>
 
