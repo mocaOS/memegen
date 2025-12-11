@@ -94,7 +94,7 @@
                 <li>Lines: {{ template.lines }}</li>
                 <li class="truncate">ID: {{ template.id }}</li>
                 <li>
-                  <a :href="template.blank" target="_blank" download class="text-primary hover:underline break-words">
+                  <a :href="`${template.blank}?width=1000`" target="_blank" download class="text-primary hover:underline break-words">
                     Download Empty Template
                   </a>
                 </li>
