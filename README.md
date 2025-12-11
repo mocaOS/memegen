@@ -139,7 +139,7 @@ This makes every meme instantly shareable - just copy the URL from your browser!
 The API endpoint can be easily changed in `src/config/api.js`:
 
 ```javascript
-export const API_BASE_URL = 'https://api-memegen.moca.qwellco.de';
+export const API_BASE_URL = 'https://api-memegen.decc0s.com';
 ```
 
 Simply update the URL string to point to your desired API endpoint.
