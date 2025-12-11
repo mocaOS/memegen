@@ -184,6 +184,10 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  initialTextLines: {
+    type: Array,
+    default: null,
+  },
 });
 
 const emit = defineEmits(['select-template', 'next-template', 'prev-template']);
@@ -204,6 +208,9 @@ let touchStartY = 0;
 let touchEndX = 0;
 let touchEndY = 0;
 
+// URL update handling
+let urlUpdateTimer = null;
+
 // Generate meme URL based on template and text
 const memeUrl = computed(() => {
   if (!props.template) return '';
@@ -222,19 +229,36 @@ const memeUrl = computed(() => {
 });
 
 // Watch for template changes
-watch(() => props.template, (newTemplate) => {
+watch(() => props.template, (newTemplate, oldTemplate) => {
   if (newTemplate) {
-    // Initialize text lines with example text or empty strings
-    const exampleText = newTemplate.example?.text || [];
-    textLines.value = Array(newTemplate.lines)
-      .fill('')
-      .map((_, i) => exampleText[i] || '');
+    // Use initialTextLines if provided (from URL), otherwise use example text
+    if (props.initialTextLines && props.initialTextLines.length > 0 && oldTemplate === null) {
+      // Only use initialTextLines when coming from URL (oldTemplate is null)
+      textLines.value = Array(newTemplate.lines)
+        .fill('')
+        .map((_, i) => props.initialTextLines[i] || '');
+    } else {
+      const exampleText = newTemplate.example?.text || [];
+      textLines.value = Array(newTemplate.lines)
+        .fill('')
+        .map((_, i) => exampleText[i] || '');
+    }
     
     // Only show loading spinner when switching templates
     initialLoading.value = true;
     imageError.value = false;
+    
+    // Update URL when template changes
+    updateUrl();
   }
 }, { immediate: true });
+
+// Watch for text changes and update URL (debounced)
+watch(textLines, () => {
+  if (props.template) {
+    debouncedUrlUpdate();
+  }
+}, { deep: true });
 
 // Handle image load
 const handleImageLoad = () => {
@@ -342,8 +366,43 @@ const selectRandomTemplate = () => {
 // Go back to landing page
 const goBack = () => {
   emit('select-template', null);
+  window.history.pushState({}, '', '#/');
   // Fetch a new random template for the landing page
   fetchRandomTemplate();
+};
+
+// Update URL with current template and text
+const updateUrl = () => {
+  if (!props.template) {
+    window.history.pushState({}, '', '#/');
+    return;
+  }
+  
+  // Build URL with template ID and text
+  const textPath = textLines.value
+    .map(line => {
+      const text = line.trim();
+      return text ? encodeURIComponent(text.replace(/ /g, '_')) : '';
+    })
+    .filter(text => text) // Remove empty strings
+    .join('/');
+  
+  const url = textPath 
+    ? `#/${props.template.id}/${textPath}`
+    : `#/${props.template.id}`;
+  
+  window.history.pushState({}, '', url);
+};
+
+// Debounced URL update for text changes
+const debouncedUrlUpdate = () => {
+  if (urlUpdateTimer) {
+    clearTimeout(urlUpdateTimer);
+  }
+  
+  urlUpdateTimer = setTimeout(() => {
+    updateUrl();
+  }, 500);
 };
 
 // Swipe gesture handlers for mobile navigation

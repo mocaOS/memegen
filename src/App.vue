@@ -39,6 +39,7 @@
     <!-- Main Content -->
     <MemeEditor 
       :template="selectedTemplate"
+      :initial-text-lines="initialTextLines"
       @select-template="selectTemplate"
       @next-template="navigateToNextTemplate"
       @prev-template="navigateToPrevTemplate"
@@ -48,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
 import TemplateSidebar from './components/TemplateSidebar.vue';
 import MemeEditor from './components/MemeEditor.vue';
@@ -57,9 +58,12 @@ import { API_ENDPOINTS } from './config/api';
 const selectedTemplate = ref(null);
 const sidebarOpen = ref(false);
 const templates = ref([]);
+const initialTextLines = ref([]);
+const templatesLoaded = ref(false);
 
-const selectTemplate = (template) => {
+const selectTemplate = (template, textLines = null) => {
   selectedTemplate.value = template;
+  initialTextLines.value = textLines || [];
 };
 
 const handleSelectTemplate = (template) => {
@@ -109,11 +113,38 @@ const navigateToPrevTemplate = () => {
   }
 };
 
+// Parse URL hash to load template and text
+const parseUrlAndLoadTemplate = () => {
+  const hash = window.location.hash.slice(1); // Remove #
+  if (!hash || hash === '/' || !templatesLoaded.value) return;
+  
+  const parts = hash.split('/').filter(p => p);
+  if (parts.length === 0) return;
+  
+  const templateId = parts[0];
+  const textLines = parts.slice(1).map(text => decodeURIComponent(text).replace(/_/g, ' '));
+  
+  // Find template by ID
+  const template = uniqueTemplates.value.find(t => t.id === templateId);
+  if (template) {
+    selectTemplate(template, textLines.length > 0 ? textLines : null);
+  }
+};
+
+// Handle browser back/forward buttons
+const handlePopState = () => {
+  parseUrlAndLoadTemplate();
+};
+
 // Fetch templates on mount
 const fetchTemplates = async () => {
   try {
     const response = await axios.get(API_ENDPOINTS.templates);
     templates.value = response.data;
+    templatesLoaded.value = true;
+    
+    // Parse URL after templates are loaded
+    parseUrlAndLoadTemplate();
   } catch (error) {
     console.error('Error fetching templates:', error);
   }
@@ -121,6 +152,8 @@ const fetchTemplates = async () => {
 
 onMounted(() => {
   fetchTemplates();
+  // Listen for browser back/forward buttons
+  window.addEventListener('popstate', handlePopState);
 });
 </script>
 
