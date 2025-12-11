@@ -30,11 +30,15 @@ Community members create memes and share them in the [Art DeCC0s Discord](https:
 - 📝 **Live Text Editor** - Edit meme text with instant preview updates
 - 🖼️ **Real-Time Preview** - See your meme update as you type
 - ⬇️ **Download Memes** - Save your creations with one click
-- 📄 **Empty Templates** - Download blank templates for external editing
+- 📋 **Copy to Clipboard** - Instantly copy memes to paste anywhere
+- 📄 **Empty Templates** - Download blank templates in high quality (1000px)
+- 🔗 **Shareable URLs** - Every meme gets a unique URL to share with others
+- 📱 **Mobile Swipe Navigation** - Swipe left/right to browse templates on mobile
 - 🎨 **Monochrome Design** - Clean grayscale UI with #FF9500 orange highlights
 - 📱 **Responsive** - Works perfectly on desktop and mobile
 - ⚡ **Fast & Modern** - Built with Vue 3 and Vite for instant loading
 - 💬 **Discord Integration** - Direct link to share your memes with the community
+- ↩️ **Browser Navigation** - Back/forward buttons work seamlessly
 
 ## 📚 API Documentation
 
@@ -96,13 +100,37 @@ npm run preview
 1. **Browse templates** in the left sidebar or use the search bar
 2. **Click a template** to select it
 3. **Edit text lines** in the right panel - preview updates in real-time
-4. **Download your meme** using the "Download Meme" button
-5. **Share on Discord** using the link in the top-right corner
+4. **Copy to clipboard** or **download your meme** using the action buttons
+5. **Share the URL** - the browser URL automatically updates with your meme content
+6. **Share on Discord** using the link in the top-right corner
 
 ### Navigation
 - **Back button** (←) returns to the landing page with a new random template
 - **Search** filters templates by name or ID
 - **Template info** shows lines count, template ID, and blank template download
+- **Mobile swipe** - swipe left for next template, swipe right for previous template
+- **Browser buttons** - back/forward buttons navigate through your meme history
+
+### Sharing Memes
+- Every meme you create gets a unique URL (e.g., `#/drake/Top_Text/Bottom_Text`)
+- Copy the URL from your browser and share it with anyone
+- Recipients will see your exact meme with the same text
+- They can then edit and create their own version
+
+## 🔗 URL Structure
+
+The app uses hash-based routing to create shareable meme links:
+
+- **Landing page**: `#/`
+- **Template with example text**: `#/drake`
+- **Template with custom text**: `#/drake/First_Line/Second_Line`
+
+The URL automatically updates as you:
+- Select different templates
+- Edit meme text (debounced by 500ms)
+- Navigate with swipe gestures or browser buttons
+
+This makes every meme instantly shareable - just copy the URL from your browser!
 
 ## ⚙️ Configuration
 
@@ -122,6 +150,9 @@ Simply update the URL string to point to your desired API endpoint.
 - **Tailwind CSS** - Utility-first CSS framework with custom monochrome palette
 - **Vite** - Next-generation frontend build tool
 - **Axios** - HTTP client for API requests
+- **Hash-based Routing** - Custom URL routing for shareable memes (no router library needed)
+- **Clipboard API** - Native browser API for copying images
+- **Touch Events** - Mobile swipe gesture support
 - **Memegen API** - Community meme template API
 
 ## 📁 Project Structure
@@ -131,10 +162,10 @@ memegen/
 ├── src/
 │   ├── components/
 │   │   ├── TemplateSidebar.vue    # Template browser with search
-│   │   └── MemeEditor.vue          # Main editor with preview and controls
+│   │   └── MemeEditor.vue          # Main editor with preview, controls, and swipe gestures
 │   ├── config/
 │   │   └── api.js                  # API endpoint configuration
-│   ├── App.vue                     # Root component
+│   ├── App.vue                     # Root component with URL routing logic
 │   ├── main.js                     # Application entry point
 │   └── style.css                   # Global styles with custom theme
 ├── public/                         # Static assets
